@@ -1,0 +1,23 @@
+.headerAndInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
+}
+.header {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  font-size: 33px;
+}
+.icon {
+  height: 50px;
+  width: 50px;
+}
+.deadSpace {
+  height: 20px;
+}
+.infoPara {
+  font-size: 17px;
+  font-weight: 500;
+}

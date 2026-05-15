@@ -1,0 +1,32 @@
+.fileInput {
+  border: 3px solid white;
+  border-radius: 10px;
+  padding: 10px;
+  width: 500px;
+  margin: auto;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.fileInput:hover {
+  box-shadow: 4px 4px 8px 3px rgba(255, 255, 255, 0.69);
+}
+.header {
+  font-size: 22px;
+  display: flex;
+  justify-content: center;
+}
+.fileContent {
+  display: grid;
+  grid-template-columns: 20% 75%;
+  place-items: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+.icon {
+  height: 30px;
+  width: 30px;
+}
+.inputFile {
+  display: none;
+}
