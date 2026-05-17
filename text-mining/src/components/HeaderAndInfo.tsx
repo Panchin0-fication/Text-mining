@@ -10,7 +10,7 @@ export default function HeaderAndInfo() {
       <p className={styles.infoPara}>
         This is a project made for class <span>Data Mining</span>{" "}
       </p>
-      <div className={styles.deadSpace}></div>
+      <div className="deadSpace"></div>
       <p className={styles.infoPara}>
         Select a txt file to mine and look for useful data
       </p>

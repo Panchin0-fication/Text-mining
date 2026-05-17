@@ -1,6 +1,6 @@
 import "./App.css";
-import { useEffect, useRef } from "react";
-import { HeaderAndInfo, FileInput } from "./components/index";
+import { useEffect, useRef, useState } from "react";
+import { HeaderAndInfo, FileInput, OneHot } from "./components/index";
 
 function App() {
   /*Call backend test  */
@@ -13,11 +13,14 @@ function App() {
     callBackend();
   }, []);
   const fileRef = useRef<any>([]);
+  const [oneHot, setOneHot] = useState<any>();
+
   return (
     <div className="body">
       <HeaderAndInfo />
-      <FileInput fileRef={fileRef} />
-      {/*Call backend test */}
+      <FileInput fileRef={fileRef} setOneHot={setOneHot} />
+      {oneHot && <OneHot oneHot={oneHot} />}
+      <div className="deadSpace"></div>
     </div>
   );
 }

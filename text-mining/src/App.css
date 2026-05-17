@@ -54,3 +54,7 @@ h3 {
 span {
   font-weight: 800;
 }
+
+.deadSpace {
+  height: 20px;
+}

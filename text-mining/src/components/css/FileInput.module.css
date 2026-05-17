@@ -18,7 +18,7 @@
 }
 .fileContent {
   display: grid;
-  grid-template-columns: 20% 75%;
+  grid-template-columns: 20% 70%;
   place-items: center;
   gap: 15px;
   margin-top: 10px;

@@ -1,15 +1,34 @@
+import { useState } from "react";
 import styles from "./css/FileInput.module.css";
 import { FaFileAlt } from "react-icons/fa";
 
 type props = {
   fileRef: any;
+  setOneHot: React.Dispatch<React.SetStateAction<any>>;
 };
-export default function FileInput({ fileRef }: props) {
+export default function FileInput({ fileRef, setOneHot }: props) {
+  const [nameFile, setNameFile] = useState("");
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileObj = event.target.files && event.target.files[0];
     if (!fileObj) return;
 
     console.log("Selected file:", fileObj.name);
+    setNameFile(fileObj.name);
+    const callBackend = async () => {
+      const formData = new FormData();
+      formData.append("file", fileObj);
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/check`, {
+          method: "POST",
+          body: formData,
+        });
+        const res = await response.json();
+        setOneHot(res.one_hot);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    callBackend();
   };
   return (
     <>
@@ -20,14 +39,15 @@ export default function FileInput({ fileRef }: props) {
         }}
       >
         <div className={styles.header}>
-          <h3>Introduce a txt file to extract data</h3>
+          {nameFile === "" && <h3>Introduce a txt file to extract data</h3>}
+          {nameFile !== "" && <h3>Current file: {nameFile}</h3>}
         </div>
 
         <div className={styles.fileContent}>
           <FaFileAlt className={styles.icon} />
           <div>
             <p>
-              Insert a txt file with various paragraphs, eacht one must be
+              The file must contain various paragraphs, each one must be
               separated by an empty row. The language of the text must be in
               Spanish
             </p>
