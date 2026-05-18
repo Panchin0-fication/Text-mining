@@ -6,8 +6,16 @@ type props = {
   fileRef: any;
   setOneHot: React.Dispatch<React.SetStateAction<any>>;
   setPairs: React.Dispatch<React.SetStateAction<any>>;
+  setWordToIndex: React.Dispatch<React.SetStateAction<any>>;
+  setIdf: React.Dispatch<React.SetStateAction<any>>;
 };
-export default function FileInput({ fileRef, setOneHot, setPairs }: props) {
+export default function FileInput({
+  fileRef,
+  setOneHot,
+  setPairs,
+  setWordToIndex,
+  setIdf,
+}: props) {
   const [nameFile, setNameFile] = useState("");
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileObj = event.target.files && event.target.files[0];
@@ -27,6 +35,8 @@ export default function FileInput({ fileRef, setOneHot, setPairs }: props) {
         console.log("Mi data", res);
         setOneHot(res.one_hot);
         setPairs(res.pairs);
+        setWordToIndex(res.word_to_index);
+        setIdf(res.idf);
       } catch (error) {
         console.error(error);
       }

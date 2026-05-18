@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, File
 import string
 import unicodedata
+import math
 
 router = APIRouter()
 
@@ -70,7 +71,7 @@ async def check_file(file: UploadFile = File(...)):
                     pairs.append((tokens[i], tokens[j]))
         return pairs
 
-    def frequencies(text_file):
+    def frequencies(text_file, set_all_tokens):
 
         with open(text_file, "r", encoding="utf-8") as f:
             corpus = f.read()
@@ -91,18 +92,32 @@ async def check_file(file: UploadFile = File(...)):
                 tokens_record[token] = count_token / len(tokenized_paragraph)
             
             term_frecuency.append(tokens_record)
+        
+        document_frecuency = {}
+        for token in set_all_tokens:
+            count_j = 0
+            for i in range(len(tokenized_paragraphs)):
+                if tokenized_paragraphs[i].count(token) >= 1:
+                    count_j += 1
+            document_frecuency[token] = math.log(len(tokenized_paragraphs)/count_j)
                 
         all_idf = []
+        for i in range(len(term_frecuency)):
+            an_idf = {}
+            for token in term_frecuency[i]:
+                an_idf[token] = term_frecuency[i][token] * document_frecuency[token]
+            all_idf.append(an_idf)
+
+        return all_idf
 
     text_file = file.filename
     stopwords_file = "stopwords-es.txt"
 
     final_tokens = normalize_text(text_file, stopwords_file)
-
+    
     vocabulary, word_to_index, one_hot_map = indexing_one_hot(final_tokens)
-
     pairs = make_pairs(final_tokens, ventana=2)
 
-    frequencies(text_file)
+    idf = frequencies(text_file, list(set(final_tokens)))
 
-    return({"one_hot":one_hot_map, "pairs":pairs})
+    return({"word_to_index":word_to_index,"one_hot":one_hot_map, "pairs":pairs,"idf":idf})
