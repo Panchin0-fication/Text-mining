@@ -5,8 +5,9 @@ import { FaFileAlt } from "react-icons/fa";
 type props = {
   fileRef: any;
   setOneHot: React.Dispatch<React.SetStateAction<any>>;
+  setPairs: React.Dispatch<React.SetStateAction<any>>;
 };
-export default function FileInput({ fileRef, setOneHot }: props) {
+export default function FileInput({ fileRef, setOneHot, setPairs }: props) {
   const [nameFile, setNameFile] = useState("");
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileObj = event.target.files && event.target.files[0];
@@ -23,7 +24,9 @@ export default function FileInput({ fileRef, setOneHot }: props) {
           body: formData,
         });
         const res = await response.json();
+        console.log("Mi data", res);
         setOneHot(res.one_hot);
+        setPairs(res.pairs);
       } catch (error) {
         console.error(error);
       }

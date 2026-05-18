@@ -1,10 +1,11 @@
 import { type ReactNode } from "react";
+import { MyTable } from "./index";
 import styles from "./css/OneHot.module.css";
 type props = {
   oneHot: any;
 };
 export default function OneHot({ oneHot }: props) {
-  function buildTable(): ReactNode {
+  function buildOneHotT(): ReactNode {
     const keys = Object.keys(oneHot);
     const ths = keys.map((column) => <th key={column}>{column}</th>);
     const tableHeader = (
@@ -22,16 +23,16 @@ export default function OneHot({ oneHot }: props) {
       allRows.push(<tr key={i}>{row}</tr>);
     }
     return (
-      <table>
+      <MyTable>
         {tableHeader}
         <tbody>{allRows}</tbody>
-      </table>
+      </MyTable>
     );
   }
   return (
     <>
       <h2 className={styles.header}>One Hot Encoding</h2>
-      <div className={styles.tableCon}>{buildTable()}</div>
+      <>{buildOneHotT()}</>
     </>
   );
 }

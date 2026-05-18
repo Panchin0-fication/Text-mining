@@ -6,55 +6,44 @@ router = APIRouter()
 
 @router.get("/")
 def read_root():
-    return {"mensaje": "¡Hello, FastAPI!"}
+    return {"message": "¡Hello, FastAPI!"}
 
 @router.post("/check")
 async def check_file(file: UploadFile = File(...)):
     content = await file.read()
 
-    # Guardar archivo
     with open(file.filename, "wb") as f:
         f.write(content)
 
-    """return {
-        "filename": file.filename,
-        "content_type": file.content_type
-    }"""
+    def eliminate_accentuation(text):
+        text = unicodedata.normalize('NFD', text)
+        return ''.join(c for c in text if unicodedata.category(c) != 'Mn')
 
-
-   
-
-    def eliminar_acentos(texto):
-        # Convierte a forma descompuesta (NFD) y filtra las marcas de acento (Mn)
-        texto = unicodedata.normalize('NFD', texto)
-        return ''.join(c for c in texto if unicodedata.category(c) != 'Mn')
-
-    def normalizar_texto(archivo_texto, archivo_stopwords, raw_text=""):
-        # Leer archivos
+    def normalize_text(text_file, stopwords_file, raw_text=""):
         corpus = ""
 
         if(raw_text == ""):
-            with open(archivo_texto, "r", encoding="utf-8") as f:
+            with open(text_file, "r", encoding="utf-8") as f:
                 corpus = f.read()
         else:
             corpus = raw_text
-        with open(archivo_stopwords, "r", encoding="utf-8") as f:
-            stop_words = {eliminar_acentos(line.strip().lower()) for line in f}
+        with open(stopwords_file, "r", encoding="utf-8") as f:
+            stop_words = {eliminate_accentuation(line.strip().lower()) for line in f}
 
         # Normalizacion
         corpus = corpus.lower()
-        corpus = eliminar_acentos(corpus)
+        corpus = eliminate_accentuation(corpus)
         tabla_puntuacion = str.maketrans('', '', string.punctuation + '¡¿')
         corpus = corpus.translate(tabla_puntuacion)
         
         tokens_iniciales = corpus.split()
         
-        # Quitar Stop-words
+        # Remove Stop-words
         tokens_finales = [t for t in tokens_iniciales if t not in stop_words]
         
         return tokens_finales
 
-    def indexacion_one_hot(tokens):
+    def indexing_one_hot(tokens):
 
         vocabulario = list(set(tokens))
         vocab_size = len(vocabulario)
@@ -69,81 +58,51 @@ async def check_file(file: UploadFile = File(...)):
             
         return vocabulario, word_to_index, one_hot_encoding
 
-    def conformar_parejas(tokens, ventana=2):
-        parejas = []
+    def make_pairs(tokens, ventana=2):
+        pairs = []
         n = len(tokens)
         for i in range(n):
-            inicio = max(0, i - ventana)
-            fin = min(n, i + ventana + 1)
+            start = max(0, i - ventana)
+            end = min(n, i + ventana + 1)
             
-            for j in range(inicio, fin):
+            for j in range(start, end):
                 if i != j:
-                    parejas.append((tokens[i], tokens[j]))
-        return parejas
+                    pairs.append((tokens[i], tokens[j]))
+        return pairs
 
-    def frecuencias(archivo_texto):
+    def frequencies(text_file):
 
-        with open(archivo_texto, "r", encoding="utf-8") as f:
+        with open(text_file, "r", encoding="utf-8") as f:
             corpus = f.read()
 
-        print("QUE",corpus)
+        #Divide Corpus
+        divided_corpus = corpus.split("\n\n")
 
-        #Dividir texto
-        corpus_dividido = corpus.split("\n\n")
-
-        parrafos_tokensados = []
+        tokenized_paragraphs = []
         term_frecuency = []
-        for parrafo in corpus_dividido:
-            ocurrencias = {}
-            parrafo_tokenizado = normalizar_texto(archivo_texto, archivo_stopwords, parrafo)
-            parrafos_tokensados.append(parrafo_tokenizado)
-            set_tokens = set(parrafo_tokenizado)
+        for paragraph in divided_corpus:
+            tokens_record = {}
+            tokenized_paragraph = normalize_text(text_file, stopwords_file, paragraph)
+            tokenized_paragraphs.append(tokenized_paragraph)
+            set_tokens = set(tokenized_paragraph)
             # Get all the ocurrencies
             for token in set_tokens:
-                oocurrencias = parrafo_tokenizado.count(token)
-                ocurrencias[token] = oocurrencias / len(parrafo_tokenizado)
+                count_token = tokenized_paragraph.count(token)
+                tokens_record[token] = count_token / len(tokenized_paragraph)
             
-            term_frecuency.append(ocurrencias)
+            term_frecuency.append(tokens_record)
                 
+        all_idf = []
 
-        print("Estos son los parrafos tokenizados",parrafos_tokensados,len(parrafos_tokensados))
-        print("Estas son las ocurrencias por parrafos", term_frecuency)
-        todos_idf = []
+    text_file = file.filename
+    stopwords_file = "stopwords-es.txt"
 
-        #for i in range(len(parrafos_tokensados)):
+    final_tokens = normalize_text(text_file, stopwords_file)
 
-            
+    vocabulary, word_to_index, one_hot_map = indexing_one_hot(final_tokens)
 
+    pairs = make_pairs(final_tokens, ventana=2)
 
+    frequencies(text_file)
 
-    archivo_texto = file.filename
-    archivo_stopwords = "stopwords-es.txt"
-
-    tokens_finales = normalizar_texto(archivo_texto, archivo_stopwords)
-
-    vocabulario, word_to_index, one_hot_map = indexacion_one_hot(tokens_finales)
-
-    parejas = conformar_parejas(tokens_finales, ventana=2)
-
-    print("-" * 30)
-    print("1.- CONJUNTO DE TOKENS FINALES (Posición final):")
-    print("-" * 30)
-    print(tokens_finales)
-    print(f"\nTotal de tokens: {len(tokens_finales)}")
-
-    print("\n" + "-" * 30)
-    print("INDEXACIÓN (Mapeo Vocabulario -> Índice):")
-    print("-" * 30)
-    for word, idx in word_to_index.items():
-        print(f"{word}: {idx}")
-
-    print("\n" + "-" * 30)
-    print("2.- PAREJAS DE TOKENS (Ventana tamaño 2):")
-    print("-" * 30)
-    for p in parejas:
-        print(p)
-    print(f"\nTotal de parejas: {len(parejas)}")
-
-    frecuencias(archivo_texto)
-
-    return({"one_hot":one_hot_map})
+    return({"one_hot":one_hot_map, "pairs":pairs})
