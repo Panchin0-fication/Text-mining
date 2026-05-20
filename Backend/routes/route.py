@@ -2,6 +2,7 @@ from fastapi import APIRouter, UploadFile, File
 import string
 import unicodedata
 import math
+from functions.train_skip_gram import train_skipgram
 
 router = APIRouter()
 
@@ -59,8 +60,10 @@ async def check_file(file: UploadFile = File(...)):
             
         return vocabulario, word_to_index, one_hot_encoding
 
-    def make_pairs(tokens, ventana=2):
+    def make_pairs(tokens, word_to_index, ventana=2):
+        #pairs = []
         pairs = []
+        user_pairs = []
         n = len(tokens)
         for i in range(n):
             start = max(0, i - ventana)
@@ -68,8 +71,9 @@ async def check_file(file: UploadFile = File(...)):
             
             for j in range(start, end):
                 if i != j:
-                    pairs.append((tokens[i], tokens[j]))
-        return pairs
+                    user_pairs.append((tokens[i], tokens[j]))
+                    pairs.append((word_to_index[tokens[i]],word_to_index[tokens[j]]))
+        return pairs, user_pairs
 
     def frequencies(text_file, set_all_tokens):
 
@@ -101,23 +105,26 @@ async def check_file(file: UploadFile = File(...)):
                     count_j += 1
             document_frecuency[token] = math.log(len(tokenized_paragraphs)/count_j)
                 
-        all_idf = []
+        tf_idf = []
         for i in range(len(term_frecuency)):
             an_idf = {}
             for token in term_frecuency[i]:
                 an_idf[token] = term_frecuency[i][token] * document_frecuency[token]
-            all_idf.append(an_idf)
+            tf_idf.append(an_idf)
 
-        return all_idf
+        return tf_idf
 
     text_file = file.filename
     stopwords_file = "stopwords-es.txt"
-
+    
     final_tokens = normalize_text(text_file, stopwords_file)
     
     vocabulary, word_to_index, one_hot_map = indexing_one_hot(final_tokens)
-    pairs = make_pairs(final_tokens, ventana=2)
+    print("Indices",word_to_index)
+    pairs,  user_pairs = make_pairs(final_tokens, word_to_index, ventana=2)
 
-    idf = frequencies(text_file, list(set(final_tokens)))
+    tf_idf = frequencies(text_file, list(set(final_tokens)))
 
-    return({"word_to_index":word_to_index,"one_hot":one_hot_map, "pairs":pairs,"idf":idf})
+    train_skipgram(word_to_index, pairs, final_tokens)
+
+    return({"word_to_index":word_to_index,"one_hot":one_hot_map, "pairs":user_pairs,"idf":tf_idf})

@@ -1,6 +1,7 @@
 import "./App.css";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { HeaderAndInfo, FileInput, Field, MyTable } from "./components/index";
+import { FaArrowRotateRight } from "react-icons/fa6";
 
 function App() {
   /*Call backend test  */
@@ -17,6 +18,7 @@ function App() {
   const [pairs, setPairs] = useState<any>();
   const [wordToIndex, setWordToIndex] = useState<any>();
   const [idf, setIdf] = useState<any>();
+  const [loading, setLoading] = useState(false);
 
   //Functions
   function showWordToIndex(): ReactNode {
@@ -70,8 +72,8 @@ function App() {
     const tableHeader = (
       <thead>
         <tr>
-          <th>Word 1</th>
-          <th>Word 2</th>
+          <th>Token 1</th>
+          <th>Token 2</th>
         </tr>
       </thead>
     );
@@ -130,18 +132,24 @@ function App() {
         setPairs={setPairs}
         setWordToIndex={setWordToIndex}
         setIdf={setIdf}
+        setLoading={setLoading}
       />
-      {wordToIndex && (
-        <Field
-          buildFunction={showWordToIndex}
-          fieldHeader={"Vocabulary and Indexation"}
-        />
+      {!loading && (
+        <>
+          {wordToIndex && (
+            <Field
+              buildFunction={showWordToIndex}
+              fieldHeader={"Vocabulary and Indexation"}
+            />
+          )}
+          {oneHot && (
+            <Field buildFunction={showOneHot} fieldHeader="One Hot encoding" />
+          )}
+          {pairs && <Field buildFunction={showPairs} fieldHeader="Pairs" />}
+          {idf && <Field buildFunction={showIdf} fieldHeader="Idf's" />}
+        </>
       )}
-      {oneHot && (
-        <Field buildFunction={showOneHot} fieldHeader="One Hot encoding" />
-      )}
-      {pairs && <Field buildFunction={showPairs} fieldHeader="Pairs" />}
-      {idf && <Field buildFunction={showIdf} fieldHeader="Idf's" />}
+      {loading && <FaArrowRotateRight className="loader" />}
 
       <div className="deadSpace"></div>
     </div>

@@ -2,7 +2,8 @@
   width: max-content;
   max-width: 80vw;
   overflow: scroll;
-  height: 500px;
+  height: max-content;
+  max-height: 500px;
   margin: auto;
   margin-top: 15px;
 }

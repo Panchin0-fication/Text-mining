@@ -8,6 +8,7 @@ type props = {
   setPairs: React.Dispatch<React.SetStateAction<any>>;
   setWordToIndex: React.Dispatch<React.SetStateAction<any>>;
   setIdf: React.Dispatch<React.SetStateAction<any>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export default function FileInput({
   fileRef,
@@ -15,12 +16,13 @@ export default function FileInput({
   setPairs,
   setWordToIndex,
   setIdf,
+  setLoading,
 }: props) {
   const [nameFile, setNameFile] = useState("");
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileObj = event.target.files && event.target.files[0];
     if (!fileObj) return;
-
+    setLoading(true);
     console.log("Selected file:", fileObj.name);
     setNameFile(fileObj.name);
     const callBackend = async () => {
@@ -40,6 +42,7 @@ export default function FileInput({
       } catch (error) {
         console.error(error);
       }
+      setLoading(false);
     };
     callBackend();
   };

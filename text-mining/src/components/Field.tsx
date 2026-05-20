@@ -13,7 +13,7 @@ export default function Field({ buildFunction, fieldHeader }: props) {
         <h2>{fieldHeader}</h2>
         <IoArrowDownOutline
           onClick={() => setShow(!show)}
-          className={styles.icon}
+          className={`${styles.icon} ${show ? styles.rotate : ""}`}
         />
       </div>
       <div style={{ display: show ? "block" : "none" }}>

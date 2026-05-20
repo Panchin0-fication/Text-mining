@@ -54,6 +54,18 @@ h3 {
 span {
   font-weight: 800;
 }
+.loader {
+  width: 150px;
+  height: 150px;
+  margin-left: 45vw;
+  margin-top: 30px;
+  animation: l1 1s infinite;
+}
+@keyframes l1 {
+  to {
+    transform: rotate(1turn);
+  }
+}
 
 .deadSpace {
   height: 20px;
