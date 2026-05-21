@@ -99,7 +99,7 @@ function App() {
         <thead>
           <tr>
             <th>Token</th>
-            <th>Idf</th>
+            <th>tf idf</th>
           </tr>
         </thead>
       );
