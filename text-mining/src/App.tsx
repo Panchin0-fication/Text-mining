@@ -1,6 +1,12 @@
 import "./App.css";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { HeaderAndInfo, FileInput, Field, MyTable } from "./components/index";
+import {
+  HeaderAndInfo,
+  FileInput,
+  Field,
+  MyTable,
+  Lookup,
+} from "./components/index";
 import { FaArrowRotateRight } from "react-icons/fa6";
 
 function App() {
@@ -123,6 +129,7 @@ function App() {
 
     return AllContend;
   }
+
   return (
     <div className="body">
       <HeaderAndInfo />
@@ -136,6 +143,7 @@ function App() {
       />
       {!loading && (
         <>
+          <Lookup oneHot={oneHot} />
           {wordToIndex && (
             <Field
               buildFunction={showWordToIndex}

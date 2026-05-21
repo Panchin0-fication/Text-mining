@@ -1,0 +1,36 @@
+.lookup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.lookButton {
+  padding: 7px;
+  font-size: 18px;
+  background: white;
+  color: black;
+  border-radius: 7px;
+  border: none;
+  transition: all 0.3s;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  cursor: pointer;
+}
+.lookButton:hover {
+  background-color: rgb(46, 31, 113);
+  color: white;
+}
+.flexDiv {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.input {
+  font-size: 18px;
+  padding: 3px;
+}
+.input:focus {
+  outline: none;
+}
