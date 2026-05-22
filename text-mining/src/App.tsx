@@ -25,6 +25,7 @@ function App() {
   const [wordToIndex, setWordToIndex] = useState<any>();
   const [idf, setIdf] = useState<any>();
   const [loading, setLoading] = useState(false);
+  const [tokens, setTokens] = useState();
 
   //Functions
   function showWordToIndex(): ReactNode {
@@ -140,15 +141,18 @@ function App() {
         setWordToIndex={setWordToIndex}
         setIdf={setIdf}
         setLoading={setLoading}
+        setTokens={setTokens}
       />
       {!loading && (
         <>
-          <Lookup oneHot={oneHot} />
           {wordToIndex && (
-            <Field
-              buildFunction={showWordToIndex}
-              fieldHeader={"Vocabulary and Indexation"}
-            />
+            <>
+              <Lookup oneHot={oneHot} tokens={tokens} />
+              <Field
+                buildFunction={showWordToIndex}
+                fieldHeader={"Vocabulary and Indexation"}
+              />
+            </>
           )}
           {oneHot && (
             <Field buildFunction={showOneHot} fieldHeader="One Hot encoding" />

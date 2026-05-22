@@ -9,6 +9,7 @@ type props = {
   setWordToIndex: React.Dispatch<React.SetStateAction<any>>;
   setIdf: React.Dispatch<React.SetStateAction<any>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setTokens: React.Dispatch<React.SetStateAction<any>>;
 };
 export default function FileInput({
   fileRef,
@@ -17,6 +18,7 @@ export default function FileInput({
   setWordToIndex,
   setIdf,
   setLoading,
+  setTokens,
 }: props) {
   const [nameFile, setNameFile] = useState("");
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,6 +41,7 @@ export default function FileInput({
         setPairs(res.pairs);
         setWordToIndex(res.word_to_index);
         setIdf(res.idf);
+        setTokens(res.tokens);
       } catch (error) {
         console.error(error);
       }

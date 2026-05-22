@@ -5,8 +5,9 @@ import { MdErrorOutline } from "react-icons/md";
 import styles from "./css/Lookup.module.css";
 type props = {
   oneHot: any;
+  tokens: any;
 };
-export default function Lookup({ oneHot }: props) {
+export default function Lookup({ oneHot, tokens }: props) {
   const [lookup, setLookup] = useState("");
   const [message, setMessage] = useState<undefined | ReactNode>();
 
@@ -28,18 +29,24 @@ export default function Lookup({ oneHot }: props) {
     }
     setMessage(undefined);
     console.log("Token fount", one_hot_token);
-
-    const queryString: number[] = one_hot_token
-      .map((num: number) => `one_hot_token=${encodeURIComponent(num)}`)
-      .join("&");
-
-    console.log("To send", queryString);
+    //formData.append("all_tokens", tokens);
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/lookup?${queryString}`,
-        {
-          method: "POST",
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/lookup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          one_hot_token,
+          all_tokens: tokens,
+        }),
+      });
+      const res = await response.json();
+      setMessage(
+        <div className={styles.flexDiv}>
+          <FaCheck />
+          <p>Related word: {res.fount_word}</p>
+        </div>,
       );
     } catch (error) {
       console.error(error);
@@ -48,7 +55,7 @@ export default function Lookup({ oneHot }: props) {
   return (
     <div className={styles.lookup}>
       <h2>Semantic lookup</h2>
-      <p>Search a word to (from the abilable vocabulary) look for relations </p>
+      <p>Search a word (from the abilable vocabulary) to look for relations </p>
       <div className={styles.flexDiv}>
         <input
           className={styles.input}

@@ -1,6 +1,7 @@
 import string
 import unicodedata
 import math
+import pandas as pd
 
 def eliminate_accentuation(text):
     text = unicodedata.normalize('NFD', text)
@@ -32,14 +33,15 @@ def normalize_text(text_file, stopwords_file, raw_text=""):
 
 def indexing_one_hot(tokens):
 
-    vocabulario = list(set(tokens))
+    print("QUE", len(tokens))
+    vocabulario = list(pd.Series(tokens).unique())
     vocab_size = len(vocabulario)
 
     word_to_index = {word: i for i, word in enumerate(vocabulario)}
     
     one_hot_encoding = {}
     for word in vocabulario:
-        vector = [0] * vocab_size
+        vector = [0] * len(tokens)
         vector[word_to_index[word]] = 1
         one_hot_encoding[word] = vector
         
