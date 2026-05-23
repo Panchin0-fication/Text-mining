@@ -1,15 +1,20 @@
 import { useState } from "react";
 import styles from "./css/FileInput.module.css";
 import { FaFileAlt } from "react-icons/fa";
+import {
+  type Dictionary,
+  type Pairs,
+  type Tokens,
+} from "../types/backendReturns";
 
 type props = {
   fileRef: any;
   setOneHot: React.Dispatch<React.SetStateAction<any>>;
-  setPairs: React.Dispatch<React.SetStateAction<any>>;
-  setWordToIndex: React.Dispatch<React.SetStateAction<any>>;
-  setIdf: React.Dispatch<React.SetStateAction<any>>;
+  setPairs: React.Dispatch<React.SetStateAction<Pairs[]>>;
+  setWordToIndex: React.Dispatch<React.SetStateAction<Dictionary>>;
+  setIdf: React.Dispatch<React.SetStateAction<Dictionary[]>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setTokens: React.Dispatch<React.SetStateAction<any>>;
+  setTokens: React.Dispatch<React.SetStateAction<Tokens>>;
 };
 export default function FileInput({
   fileRef,

@@ -7,6 +7,12 @@ import {
   MyTable,
   Lookup,
 } from "./components/index";
+import {
+  type Dictionary,
+  type Pairs,
+  type Tokens,
+  type OneHot,
+} from "./types/backendReturns";
 import { FaArrowRotateRight } from "react-icons/fa6";
 
 function App() {
@@ -20,12 +26,12 @@ function App() {
     callBackend();
   }, []);
   const fileRef = useRef<any>([]);
-  const [oneHot, setOneHot] = useState<any>();
-  const [pairs, setPairs] = useState<any>();
-  const [wordToIndex, setWordToIndex] = useState<any>();
-  const [idf, setIdf] = useState<any>();
+  const [oneHot, setOneHot] = useState<OneHot>({});
+  const [pairs, setPairs] = useState<Pairs[]>([]);
+  const [wordToIndex, setWordToIndex] = useState<Dictionary>({});
+  const [idf, setIdf] = useState<Dictionary[]>([]);
   const [loading, setLoading] = useState(false);
-  const [tokens, setTokens] = useState();
+  const [tokens, setTokens] = useState<Tokens>([]);
 
   //Functions
   function showWordToIndex(): ReactNode {
@@ -145,7 +151,7 @@ function App() {
       />
       {!loading && (
         <>
-          {wordToIndex && (
+          {pairs.length >= 1 && (
             <>
               <Lookup oneHot={oneHot} tokens={tokens} />
               <Field
@@ -154,11 +160,15 @@ function App() {
               />
             </>
           )}
-          {oneHot && (
+          {pairs.length >= 1 && (
             <Field buildFunction={showOneHot} fieldHeader="One Hot encoding" />
           )}
-          {pairs && <Field buildFunction={showPairs} fieldHeader="Pairs" />}
-          {idf && <Field buildFunction={showIdf} fieldHeader="Idf's" />}
+          {pairs.length >= 1 && (
+            <Field buildFunction={showPairs} fieldHeader="Pairs" />
+          )}
+          {idf.length >= 1 && (
+            <Field buildFunction={showIdf} fieldHeader="Idf's" />
+          )}
         </>
       )}
       {loading && <FaArrowRotateRight className="loader" />}

@@ -3,9 +3,11 @@ import { IoMdSearch } from "react-icons/io";
 import { FaCheck } from "react-icons/fa";
 import { MdErrorOutline } from "react-icons/md";
 import styles from "./css/Lookup.module.css";
+import { type Tokens, type OneHot } from "../types/backendReturns";
+
 type props = {
-  oneHot: any;
-  tokens: any;
+  oneHot: OneHot;
+  tokens: Tokens;
 };
 export default function Lookup({ oneHot, tokens }: props) {
   const [lookup, setLookup] = useState("");
