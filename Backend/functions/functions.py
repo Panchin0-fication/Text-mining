@@ -18,7 +18,7 @@ def normalize_text(text_file, stopwords_file, raw_text=""):
     with open(stopwords_file, "r", encoding="utf-8") as f:
         stop_words = {eliminate_accentuation(line.strip().lower()) for line in f}
 
-    # Normalizacion
+    # Standardization
     corpus = corpus.lower()
     corpus = eliminate_accentuation(corpus)
     tabla_puntuacion = str.maketrans('', '', string.punctuation + '¡¿')
@@ -32,8 +32,6 @@ def normalize_text(text_file, stopwords_file, raw_text=""):
     return tokens_finales
 
 def indexing_one_hot(tokens):
-
-    print("QUE", len(tokens))
     vocabulario = list(pd.Series(tokens).unique())
     vocab_size = len(vocabulario)
 
@@ -47,18 +45,19 @@ def indexing_one_hot(tokens):
         
     return vocabulario, word_to_index, one_hot_encoding
 
-def make_pairs(tokens, word_to_index, ventana=2):
+def make_pairs(vocabulary, word_to_index, ventana=2):
     pairs = []
     user_pairs = []
-    n = len(tokens)
+    n = len(vocabulary)
     for i in range(n):
         start = max(0, i - ventana)
         end = min(n, i + ventana + 1)
         
         for j in range(start, end):
             if i != j:
-                user_pairs.append((tokens[i], tokens[j]))
-                pairs.append((word_to_index[tokens[i]],word_to_index[tokens[j]]))
+                user_pairs.append((vocabulary[i], vocabulary[j]))
+                pairs.append((word_to_index[vocabulary[i]],word_to_index[vocabulary[j]]))
+
     return pairs, user_pairs
 
 def frequencies(text_file, stopwords_file, set_all_tokens):

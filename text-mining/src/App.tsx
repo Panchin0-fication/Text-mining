@@ -154,20 +154,17 @@ function App() {
           {pairs.length >= 1 && (
             <>
               <Lookup oneHot={oneHot} tokens={tokens} />
+              <Field buildFunction={showPairs} fieldHeader="Pairs" />
               <Field
                 buildFunction={showWordToIndex}
                 fieldHeader={"Vocabulary and Indexation"}
               />
+              <Field
+                buildFunction={showOneHot}
+                fieldHeader="One Hot encoding"
+              />
+              <Field buildFunction={showIdf} fieldHeader="Idf's" />
             </>
-          )}
-          {pairs.length >= 1 && (
-            <Field buildFunction={showOneHot} fieldHeader="One Hot encoding" />
-          )}
-          {pairs.length >= 1 && (
-            <Field buildFunction={showPairs} fieldHeader="Pairs" />
-          )}
-          {idf.length >= 1 && (
-            <Field buildFunction={showIdf} fieldHeader="Idf's" />
           )}
         </>
       )}

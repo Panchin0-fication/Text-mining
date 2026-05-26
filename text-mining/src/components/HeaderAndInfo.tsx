@@ -8,7 +8,7 @@ export default function HeaderAndInfo() {
         <GiMining className={styles.icon} />
       </div>
       <p className={styles.infoPara}>
-        This is a project made for class <span>Data Mining</span>{" "}
+        This is a project made for the <span>Data Mining</span> class
       </p>
       <div className="deadSpace"></div>
       <p className={styles.infoPara}>

@@ -5,11 +5,13 @@ import {
   type Dictionary,
   type Pairs,
   type Tokens,
+  type checkResponse,
+  type OneHot,
 } from "../types/backendReturns";
 
 type props = {
   fileRef: any;
-  setOneHot: React.Dispatch<React.SetStateAction<any>>;
+  setOneHot: React.Dispatch<React.SetStateAction<OneHot>>;
   setPairs: React.Dispatch<React.SetStateAction<Pairs[]>>;
   setWordToIndex: React.Dispatch<React.SetStateAction<Dictionary>>;
   setIdf: React.Dispatch<React.SetStateAction<Dictionary[]>>;
@@ -40,7 +42,7 @@ export default function FileInput({
           method: "POST",
           body: formData,
         });
-        const res = await response.json();
+        const res = (await response.json()) as checkResponse;
         console.log("Mi data", res);
         setOneHot(res.one_hot);
         setPairs(res.pairs);
